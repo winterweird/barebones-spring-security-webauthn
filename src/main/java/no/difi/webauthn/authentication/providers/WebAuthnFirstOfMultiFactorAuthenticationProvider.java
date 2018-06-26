@@ -6,14 +6,17 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import no.difi.webauthn.exception.*;
 
 /**
- * This is the backbone class of WebAuthn authentication.
+ * Authentication provider that authenticates based on a username and password
+ * provided by the FirstOfMultiFactorAuthenticationToken authentication request.
  *
- * This class implements the <code>authenticate()</code> method, which is used
- * by the authentication manager authenticate a user based on the WebAuthn
- * authentication protocol.
+ * The <code>authenticate()</code> method delegates authentication
+ * responsibility to an AbstractUserDetailsAuthenticationProvider, but is
+ * possible to configure to just accept this result, or to wrap it in a
+ * FirstOfMultiFactorAuthenticationToken instead.
+ * (I'm not entirely sure what it achieves by doing that yet.)
  */
-public class WebAuthnAuthenticationProvider implements AuthenticationProvider {
-
+public class WebAuthnFirstOfMultiFactorAuthenticationProvider implements AuthenticationProvider {
+    
     @Override
     public Authentication authenticate(Authentication authentication) {
         if (!supports(authentication.getClass())) {
