@@ -11,6 +11,8 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.User;
 
+import static no.difi.webauthn.authentication.filters.WebAuthnProcessingFilterConfigurer.webAuthnLogin;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -21,9 +23,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/", "/home", "/login").permitAll()
             .antMatchers("/user").hasRole("USER")
             .anyRequest().authenticated();
-        http.formLogin()
-            .loginPage("/login")
-            .permitAll();
+        http.apply(webAuthnLogin())
+            .loginPage("/login");
     }
 
     @Bean
