@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <head>
+        <title>Spring Security Example </title>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/base64-js@1.2.3/base64js.min.js"></script>
+        <script type="text/javascript">
+            console.log(window);
+            let loadChallenge = () => {
+                return fetch("http://localhost:8080/getChallenge", {
+                    method: "GET",
+                    credentials: "same-origin",
+                    headers: {
+                        //'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(res => base64js.toByteArray(res.json().value))
+                .catch(err => console.log(err));
+            };
+            let getPublicKeyCredential = (challenge) => {
+                let publicKeyCredentialRequestOptions = {
+                    challenge: challenge,
+                    //timeout: null,
+                    //rpId: null,
+                    //allowCredentials: null,
+                    userVerification: "required",
+                    extensions: {}
+                };
+                return navigator.credentials.get({
+                    mediation: "required",
+                    publicKey: publicKeyCredentialRequestOptions
+                }).then(credential => {
+                    if (typeof credential === "undefined")
+                        return Promise.reject("No credential is chosen.");
+                    else
+                        return Promise.resolve(credential);
+                });
+            };
+            let tryPerformLogin = () => {
+                console.log("Hello world");
+                loadChallenge()
+                    .then(getPublicKeyCredential)
+                    .then(credential => console.log(credential))
+                    .catch(err => console.log(err));
+            };
+        </script>
+    </head>
+    <body>
+        <div th:if="${param.error}">
+            Invalid username and password.
+        </div>
+        <div th:if="${param.logout}">
+            You have been logged out.
+        </div>
+        <form id="form-login" onsubmit="event.preventDefault(); tryPerformLogin();">
+            <div><label> User Name : <input type="text" name="username"/> </label></div>
+            <div><label> Password: <input type="password" name="password"/> </label></div>
+            <div><input type="submit" value="Sign In"/></div>
+        </form>
+    </body>
+</html>
