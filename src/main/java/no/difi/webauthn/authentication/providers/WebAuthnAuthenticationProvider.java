@@ -1,4 +1,4 @@
-package no.difi.webauthn.authentication;
+package no.difi.webauthn.authentication.providers;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.authentication.AuthenticationProvider;
