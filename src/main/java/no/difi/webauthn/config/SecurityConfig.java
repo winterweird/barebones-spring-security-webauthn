@@ -11,11 +11,21 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.User;
 
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+
 import static no.difi.webauthn.authentication.filters.WebAuthnProcessingFilterConfigurer.webAuthnLogin;
+import no.difi.webauthn.authentication.providers.WebAuthnFirstOfMultiFactorAuthenticationProvider;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    // TODO: add authentication managers
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder builder) throws Exception {
+        builder.authenticationProvider(new WebAuthnFirstOfMultiFactorAuthenticationProvider());
+    }
     
     @Override
     protected void configure(HttpSecurity http) throws Exception {

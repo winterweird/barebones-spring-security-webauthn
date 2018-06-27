@@ -3,7 +3,9 @@ package no.difi.webauthn.authentication.providers;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.authentication.AuthenticationProvider;
 
+
 import no.difi.webauthn.exception.*;
+import no.difi.webauthn.authentication.tokens.FirstOfMultiFactorAuthenticationToken;
 
 /**
  * Authentication provider that authenticates based on a username and password
@@ -28,9 +30,10 @@ public class WebAuthnFirstOfMultiFactorAuthenticationProvider implements Authent
         throw new NotImplementedException("Not yet implemented: authenticate");
     }
 
+    // Methods like these should be easy to auto-generate, as they are
+    // generally in what they do.
     @Override
     public boolean supports(Class<?> authentication) {
-        // TODO: implement
-        throw new NotImplementedException("Not yet implemented: supports");
+        return FirstOfMultiFactorAuthenticationToken.class.isAssignableFrom(authentication);
     }
 }
