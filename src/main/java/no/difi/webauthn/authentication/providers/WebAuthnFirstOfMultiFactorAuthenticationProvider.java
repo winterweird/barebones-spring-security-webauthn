@@ -3,6 +3,7 @@ package no.difi.webauthn.authentication.providers;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import no.difi.webauthn.exception.*;
 import no.difi.webauthn.authentication.tokens.FirstOfMultiFactorAuthenticationToken;
@@ -35,8 +36,19 @@ public class WebAuthnFirstOfMultiFactorAuthenticationProvider implements Authent
                     "FirstOfMultiFactorAuthenticationToken, but got " + 
                     authentication.getClass().getName());
         }
-        // TODO: implement
-        throw new NotImplementedException("Not yet implemented: authenticate");
+
+        FirstOfMultiFactorAuthenticationToken token = (FirstOfMultiFactorAuthenticationToken)authentication;
+        UsernamePasswordAuthenticationToken upToken = 
+            new UsernamePasswordAuthenticationToken(token.getPrincipal(), token.getCredentials());
+        Authentication result = authenticationProvider.authenticate(upToken);
+        
+        // TODO allow for legacy password authentication without webauthn as an
+        // optional (flag-determined) operation
+
+        return new FirstOfMultiFactorAuthenticationToken(
+                result.getPrincipal(),
+                result.getCredentials(),
+                authentication.getAuthorities());
     }
 
     // Methods like these should be easy to auto-generate, as they are
