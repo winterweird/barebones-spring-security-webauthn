@@ -9,6 +9,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 @Configuration
 public class SecurityConfigBeans {
+    /**
+     * DaoAuthenticationProvider Bean constructor.
+     *
+     * This is used as the behind-the-scenes authentication provider of the
+     * WebAuthnFirstOfMultifactorAuthenticationProvider.
+     */
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider(PasswordEncoder passwordEncoder, UserDetailsService userDetailsService) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
@@ -17,6 +23,12 @@ public class SecurityConfigBeans {
         return provider;
     }
 
+    /**
+     * PasswordEncoder Bean constructor.
+     *
+     * Used to pass a password encoder to the DaoAuthenticationProvider Bean
+     * constructor.
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
