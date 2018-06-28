@@ -39,10 +39,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
             .antMatchers("/", "/home", "/login").permitAll()
+            .antMatchers("/authenticate").hasAuthority("WEBAUTHN_AUTHENTICABLE")
             .antMatchers("/user").hasRole("USER")
             .anyRequest().authenticated();
         http.apply(webAuthnLogin())
-            .loginPage("/login");
+            .loginPage("/login")
+            .successForwardUrl("/authenticate");
     }
 
     @Bean

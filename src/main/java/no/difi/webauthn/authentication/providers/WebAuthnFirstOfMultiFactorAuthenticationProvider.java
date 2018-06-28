@@ -5,6 +5,11 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
+import java.util.List;
+import java.util.ArrayList;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
 import no.difi.webauthn.exception.*;
 import no.difi.webauthn.authentication.tokens.FirstOfMultiFactorAuthenticationToken;
 
@@ -44,11 +49,18 @@ public class WebAuthnFirstOfMultiFactorAuthenticationProvider implements Authent
         
         // TODO allow for legacy password authentication without webauthn as an
         // optional (flag-determined) operation
+        System.out.println("PRINCIPAL: " + result.getPrincipal());
+        System.out.println("CREDENTIALS: " + result.getCredentials());
+        System.out.println("AUTHORITIES: " + authentication.getAuthorities());
+        
+        List<GrantedAuthority> resultingAuthorities = new ArrayList<>(authentication.getAuthorities());
+        resultingAuthorities.add(new SimpleGrantedAuthority("WEBAUTHN_AUTHENTICABLE"));
+
 
         return new FirstOfMultiFactorAuthenticationToken(
                 result.getPrincipal(),
                 result.getCredentials(),
-                authentication.getAuthorities());
+                resultingAuthorities);
     }
 
     // Methods like these should be easy to auto-generate, as they are

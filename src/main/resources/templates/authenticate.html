@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <head>
+        <title>WebAuthn authentication</title>
+        <script type="text/javascript" th:src="@{/js/base64url.js}"></script>
+    </head>
+    <input type="hidden" id="_challenge" th:value='${_challenge}' />
+    <body>
+        <p>Press the security key to perform authentication with WebAuthn</p>
+        
+        <form id="form-webauthn" method="POST" th:action="@{/login}">
+            <input name="username" type="hidden" />
+            <input name="password" type="hidden" />
+            <input name="credentialId" type="hidden" />
+            <input name="clientData" type="hidden" />
+            <input name="authenticatorData" type="hidden" />
+            <input name="signature" type="hidden" />
+            <input name="clientExtensionsJSON" type="hidden" />
+        </form>
+        <script type="text/javascript" th:src="@{/js/login.js}"></script>
+    </body>
+</html>

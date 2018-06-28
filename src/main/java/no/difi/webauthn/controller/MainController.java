@@ -8,6 +8,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.ui.Model;
+
+import com.webauthn4j.client.challenge.DefaultChallenge;
+import com.webauthn4j.util.Base64UrlUtil;
 
 // test
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,7 +34,7 @@ public class MainController {
     }
 
     @GetMapping("/login")
-    public String login() {
+    public String getLogin() {
         return "login";
     }
 
@@ -42,6 +46,24 @@ public class MainController {
     @GetMapping("/user")
     public String user() {
         return "user";
+    }
+
+    // this needs to be a post mapping because it's redirected from a post-to-login
+    // form submission
+    @PostMapping("/authenticate")
+    public String authenticate(Model model) {
+        // TODO: do the thing
+        Challenge ch = new DefaultChallenge();
+        
+        System.out.println("Challenge in base64url: " +
+                Base64UrlUtil.encodeToString(ch.getValue()));
+        
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        
+        System.out.println("principal: " + auth.getPrincipal());
+        System.out.println("credentials: " + auth.getCredentials());
+        model.addAttribute("_challenge", Base64UrlUtil.encodeToString(ch.getValue()));
+        return "authenticate";
     }
 
     /*

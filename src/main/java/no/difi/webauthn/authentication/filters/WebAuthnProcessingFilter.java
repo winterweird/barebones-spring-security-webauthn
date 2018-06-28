@@ -70,10 +70,13 @@ public class WebAuthnProcessingFilter extends UsernamePasswordAuthenticationFilt
         System.out.println("USERNAME: " + username);
         System.out.println("PASSWORD: " + password);
 
-        // TODO: retrieve the params from the request (inline)
         // TODO: create constants for the names of the fields of the request
         // parameters
-        String credentialId = null; // this must be a variable
+        String credentialId = request.getParameter("credentialId");
+        String clientData = request.getParameter("clientData");
+        String authenticatorData = request.getParameter("authenticatorData");
+        String signature = request.getParameter("signature");
+        String clientExtensionsJSON = request.getParameter("clientExtensionsJSON");
 
         AbstractAuthenticationToken authRequest;
         if (StringUtils.isEmpty(credentialId)) {
