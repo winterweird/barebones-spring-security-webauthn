@@ -38,9 +38,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-            .antMatchers("/", "/home", "/login").permitAll()
+            .antMatchers("/", "/home").permitAll()
+            .antMatchers("/login", "/register").permitAll()
+            .antMatchers("/registerUser").permitAll()
             .antMatchers("/authenticate").hasAuthority("WEBAUTHN_AUTHENTICABLE")
             .antMatchers("/user").hasRole("USER")
+            .antMatchers("/js/**").permitAll()
             .anyRequest().authenticated();
         http.apply(webAuthnLogin())
             .loginPage("/login")
@@ -50,10 +53,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     @Override
     public UserDetailsService userDetailsService() {
-        UserDetails user = User.withUsername("user")
-            .password(new BCryptPasswordEncoder().encode("password"))
-            .roles("USER")
-            .build();
-        return new InMemoryUserDetailsManager(user);
+        return new InMemoryUserDetailsManager();
     }
 }
