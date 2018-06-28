@@ -1,4 +1,4 @@
-var addCredential = function() {
+var createCredential = function() {
     let challenge = loadChallenge();
     let userHandle = base64url.toBuffer(document.getElementById("userHandle").value);
     let makePublicKeyCredentialOptions = {
@@ -7,7 +7,7 @@ var addCredential = function() {
         },
         user: {
             id: userHandle,
-            name: document.getElementById("emailAddress").value,
+            name: document.getElementById("username").value,
             displayName: "user",
             icon: null
         },
@@ -31,9 +31,21 @@ var addCredential = function() {
         publicKey: makePublicKeyCredentialOptions
     };
 
-    navigator.credentials.create(credentialCreateOptions)
+    return navigator.credentials.create(credentialCreateOptions)
         .then(credential => {
-            console.log(credential)
-            // ...
+            if (typeof credential === "undefined") {
+                // I assume this has the same meaning as in the login thing
+                return Promise.reject("No credential is chosen");
+            }
+            else {
+                // ...
+                return Promise.resolve(credential);
+            }
         }).catch(err => console.log("Error:", err));
+};
+
+var attemptRegistration = function() {
+    createCredential()
+        .then(res => console.log(res))
+        .catch(err => console.log("Error:", err));
 };

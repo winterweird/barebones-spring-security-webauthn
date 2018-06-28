@@ -2,8 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
     <head>
-        <title>WebAuthn authentication</title>
+        <title>WebAuthn demo authentication</title>
         <script type="text/javascript" th:src="@{/js/base64url.js}"></script>
+        <script type="text/javascript" th:src="@{/js/common.js}"></script>
     </head>
     <input type="hidden" id="_challenge" th:value='${_challenge}' />
     <body>
